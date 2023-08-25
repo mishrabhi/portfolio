@@ -1,3 +1,5 @@
+const data = require("./data").data;
+
 exports.index = (req, res) => {
   res.render("home", {
     title: "Abhishek - Portfolio",
@@ -10,6 +12,7 @@ exports.projectList = (req, res) => {
     title: "Projects",
     navProject: true,
     layout: "layout",
+    projects: data.projects,
   });
 };
 
@@ -30,15 +33,25 @@ exports.contact = (req, res) => {
 };
 
 exports.projectDetail = (req, res) => {
+  const alias = req.params.alias;
+
+  let dt = data.project[data.projectIndex[alias]];
+
   res.render("projectDetail", {
     title: "Project Detail",
     layout: "layout",
+    project: dt,
   });
 };
 
 exports.blogDetail = (req, res) => {
+  let params = req.params.alias;
+  let title = params
+    .split("-")
+    .map((e) => e.slice(0, 1).toUpperCase() + e.slice(1))
+    .join(" ");
   res.render("blogDetail", {
-    title: "blogDetail",
+    title: `Blog - ${title}`,
     layout: "layout",
   });
 };
@@ -61,4 +74,48 @@ exports.admin = (req, res) => {
   res.render("admin/index", {
     layout: "adminLayout",
   });
+};
+
+exports.adminProjectList = (req, res) => {
+  res.render("admin/projectList", {
+    layout: "adminLayout",
+    projects: data.projects,
+  });
+};
+
+let user = [
+  {
+    name: "Ashutosh",
+    email: "asmyselfashu@gmail.com",
+    password: "test",
+  },
+  {
+    name: "Raja",
+    email: "raja@gmail.com",
+    password: "test",
+  },
+];
+
+exports.doSignin = (req, res) => {
+  const data = req.body;
+  let findUser = user.filter((e) => e.email == data.email);
+  if (findUser.length > 0) {
+    if (findUser[0].password === data.password) {
+      req.session.isLoggedIn = true;
+      req.session.user = findUser[0];
+      res.redirect("/admin");
+    } else {
+      res.render("signin", {
+        title: "Signin",
+        layout: "loginLayout",
+        message: "Email or password is incorrect",
+      });
+    }
+  } else {
+    res.render("signin", {
+      title: "Signin",
+      layout: "loginLayout",
+      message: "Email or password is incorrect",
+    });
+  }
 };
