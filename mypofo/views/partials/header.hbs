@@ -42,7 +42,12 @@
           <li class="nav-item"><a class="nav-link" href="#">About</a></li>
           <li class="nav-item"><a class="nav-link {{#if navContact}} active {{/if}}" href="/contact">Contact</a></li>
           <li class="nav-item"><a class="nav-link" href="#">Resume</a></li>
+          {{#if user}}
+          <li class="nav-item"><a class="nav-link" href="/admin">Admin</a></li>
+          <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+          {{else}}
           <li class="nav-item"><a class="nav-link" href="/signin">Admin</a></li>
+          {{/if}}
         </ul>
       </div>
     </div>

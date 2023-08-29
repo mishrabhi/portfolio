@@ -18,3 +18,12 @@ exports.authenticate = (req, res, next) => {
     res.redirect("/signin");
   }
 };
+
+exports.authenticated = (req, res, next) => {
+  if (req.session.isLoggedIn) {
+    res.locals.user = req.session.user;
+    next();
+  } else {
+    next();
+  }
+};

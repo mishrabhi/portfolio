@@ -94,6 +94,11 @@ let user = [
     email: "raja@gmail.com",
     password: "test",
   },
+  {
+    name: "Abhishek",
+    email: "asmyselfabhishek00@gmail.com",
+    password: "test",
+  },
 ];
 
 exports.doSignin = (req, res) => {
@@ -118,4 +123,10 @@ exports.doSignin = (req, res) => {
       message: "Email or password is incorrect",
     });
   }
+};
+
+exports.logout = (req, res) => {
+  req.session.isLoggedIn = false;
+  delete res.locals.user;
+  res.redirect("/");
 };

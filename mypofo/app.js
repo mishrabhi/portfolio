@@ -22,6 +22,7 @@ app.use(
 );
 
 app.use(express.static(__dirname + "/static"));
+app.use(middleware.authenticated);
 
 app.get("/", routes.index);
 app.get("/projects", routes.projectList);
@@ -30,10 +31,13 @@ app.get("/contact", routes.contact);
 app.get("/signin", routes.signIn);
 app.post("/signin", routes.doSignin);
 app.get("/signup", routes.signUp);
-app.get("/admin", middleware.authenticate, routes.admin);
-app.get("/admin/projects", middleware.authenticate, routes.adminProjectList);
+app.get("/logout", routes.logout);
 app.get("/projects/:alias", middleware.authenticate, routes.projectDetail);
 app.get("/blogs/:alias", middleware.authenticate, routes.blogDetail);
+
+// admin routes
+app.get("/admin", middleware.authenticate, routes.admin);
+app.get("/admin/projects", middleware.authenticate, routes.adminProjectList);
 
 app.use(middleware.notFound);
 app.use(middleware.handleError);
