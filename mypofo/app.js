@@ -1,6 +1,7 @@
 const express = require("express");
 const hbs = require("hbs");
 const session = require("express-session");
+const mongoose = require("mongoose");
 const middleware = require("./middlewares/middleware");
 const routes = require("./routes");
 const app = express();
@@ -11,6 +12,15 @@ hbs.registerPartials(__dirname + "/views/partials");
 app.use(middleware.logger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+mongoose
+  .connect("mongodb://127.0.0.1:27017/mypofo")
+  .then((dt) => {
+    console.log("DB Connected Successfully");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 app.use(
   session({
@@ -32,6 +42,8 @@ app.get("/signin", routes.signIn);
 app.post("/signin", routes.doSignin);
 app.get("/signup", routes.signUp);
 app.get("/logout", routes.logout);
+app.post("/projects", routes.createProject);
+
 app.get("/projects/:alias", middleware.authenticate, routes.projectDetail);
 app.get("/blogs/:alias", middleware.authenticate, routes.blogDetail);
 

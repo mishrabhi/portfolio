@@ -1,4 +1,10 @@
 const data = require("./data").data;
+const ProjectService = require("../services/projectService");
+
+exports.createProject = (req, res) => {
+  let data = req.body;
+  ProjectService.create(data);
+};
 
 exports.index = (req, res) => {
   res.render("home", {
@@ -7,13 +13,21 @@ exports.index = (req, res) => {
   });
 };
 
-exports.projectList = (req, res) => {
-  res.render("projects", {
-    title: "Projects",
-    navProject: true,
-    layout: "layout",
-    projects: data.projects,
-  });
+exports.projectList = (req, res, next) => {
+  function callback(err, dt) {
+    if (err) {
+      console.log(err);
+      next(err);
+    } else {
+      res.render("projects", {
+        title: "Projects",
+        navproject: true,
+        layout: "layout",
+        projects: dt,
+      });
+    }
+  }
+  ProjectService.list(callback);
 };
 
 exports.blogs = (req, res) => {
@@ -35,7 +49,7 @@ exports.contact = (req, res) => {
 exports.projectDetail = (req, res) => {
   const alias = req.params.alias;
 
-  let dt = data.project[data.projectIndex[alias]];
+  let dt = data.projects[data.projectIndex[alias]];
 
   res.render("projectDetail", {
     title: "Project Detail",
