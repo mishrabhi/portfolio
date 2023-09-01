@@ -1,5 +1,6 @@
 const data = require("./data").data;
 const router = require("express").Router();
+const ContactService = require("../services/contactService");
 
 exports.createProject = (req, res) => {
   let data = req.body;
@@ -19,6 +20,23 @@ router.get("/contact", (req, res) => {
     layout: "layout",
     navContact: true,
   });
+});
+
+router.post("/contact", (req, res, next) => {
+  let data = req.body;
+
+  ContactService.create(data)
+    .then((dt) => {
+      res.render("contact", {
+        title: "Contact",
+        layout: "layout",
+        navContact: true,
+        message: "Request submitted Successfully",
+      });
+    })
+    .catch((err) => {
+      next(err);
+    });
 });
 
 router.get("/signin", (req, res) => {
