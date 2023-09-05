@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const ContactService = require("../services/contactService");
 const ProjectService = require("../services/projectService");
+// const BlogService = require("../services/blogService");
 
 router.get("/", (req, res) => {
   res.render("admin/index", {
@@ -19,7 +20,7 @@ router.get("/projects", (req, res, next) => {
       });
     }
   }
-  ProjectService.list(cb);
+  ProjectService.list(cb, {});
 });
 
 router.get("/contacts", (req, res, next) => {
@@ -29,6 +30,97 @@ router.get("/contacts", (req, res, next) => {
         layout: "adminLayout",
         contacts: dt,
       });
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+// router.get("/blogs", (req, res, next) => {
+//   BlogService.blogList()
+//     .then((dt) => {
+//       res.render("admin/blogList", {
+//         layout: "adminLayout",
+//         blogs: dt,
+//       });
+//     })
+//     .catch((err) => {
+//       next(err);
+//     });
+// });
+
+router.get("projects/create", (req, res) => {
+  res.render("admin/projectCreate", {
+    layout: "adminLayout",
+  });
+});
+
+router.post("/projects/create", (req, res, next) => {
+  let bodyData = req.body;
+  let classes = ["primary", "info", "danger", "success"];
+  let finalTags = [];
+  if (bodyData.tags && bodyData.tags != "" && bodyData.tags != null) {
+    let tags = bodyData.tags.split(",");
+
+    finalTags = tags.map((e, i) => {
+      return { name: e, class: classes[i] };
+    });
+  }
+
+  bodyData.tags = finalTags;
+  bodyData.alias = bodyData.name.toLowerCase().split(" ").join("-");
+  ProjectService.create(bodyData)
+    .then((dt) => {
+      res.redirect("/admin/projects");
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.get("/projects/:alias", (req, res, next) => {
+  const alias = req.params.alias;
+  ProjectService.getOne(alias)
+    .then((dt) => {
+      res.render("admin/projectDetail", {
+        layout: "adminlayout",
+        project: dt,
+      });
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.get("projects/:alias/delete", (req, res, next) => {
+  const alias = req.params.alias;
+  ProjectService.deleteProject(alias)
+    .then((dt) => {
+      res.redirect("/admin/projects");
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.post("/projects/:alias/update", (req, res, next) => {
+  const alias = req.params.alias;
+  const bodyData = req.body;
+  let classes = ["primary", "info", "danger", "success"];
+  let finalTags = [];
+  if (bodyData.tags && bodyData.tags != "" && bodyData.tags != null) {
+    let tags = bodyData.tags.split(",");
+
+    finalTags = tags.map((e, i) => {
+      return { name: e, class: classes[i] };
+    });
+  }
+  bodyData.tags = finalTags;
+  bodyData.alias = bodyData.name.LowerCase().split(" ").join("-");
+
+  ProjectService.updateProject(alias, bodyData)
+    .then((dt) => {
+      res.redirect("/admin/projects");
     })
     .catch((err) => {
       next(err);

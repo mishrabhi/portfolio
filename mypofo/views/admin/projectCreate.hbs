@@ -1,0 +1,46 @@
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Projects</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+            {{!-- <div class="btn-group me-2">
+                <button type="button" class="btn btn-sm btn-outline-secondary">
+                    New Project
+                </button>
+            </div> --}}
+        </div>
+    </div>
+
+    <form action="/admin/projects/create" method="POST">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="name" class="form-control" value="">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="name">GithubUrl</label>
+                    <input type="text" name="githubUrl" class="form-control" value="">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="name">Tag</label>
+                    <input type="text" name="tags" class="form-control" value="">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="name">Description</label>
+                    <textarea type="text" rows="5" name="description" id="description" class="form-control"
+                        value=""></textarea>
+                </div>
+            </div>
+
+
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+</main>

@@ -1,11 +1,12 @@
 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
     <div
         class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Projects</h1>
+        <h1 class="h2">Blogs</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group me-2">
-                <a href="/admin/projects/create" class="btn btn-sm btn-outline-secondary">
-                    New Project </a>
+                <button type="button" class="btn btn-sm btn-outline-secondary">
+                    New Blog
+                </button>
             </div>
         </div>
     </div>
@@ -17,24 +18,24 @@
                     <th scope="col">Image</th>
                     <th scope="col">Name</th>
                     <th scope="col">Alias</th>
-                    <th scope="col">Github</th>
+                    <th scope="col">Short Description</th>
                     <th scope="col">Action</th>
                 </tr>
             </thead>
             <tbody>
-                {{#each projects}}
+                {{#each blog}}
                 <tr>
                     <td>
                         <img src="{{this.image}}" height="90" width="90" />
                     </td>
                     <td>
-                        <a class="link-underline-light link-opacity-75-hover" href="#">{{this.name}}</a>
+                        {{this.name}}
                     </td>
                     <td>{{this.alias}}</td>
                     <td>
-                        <a class="link-underline-light link-opacity-75-hover" href="{{this.githubUrl}}">Github</a>
+                        {{this.shortDescription}}
                     </td>
-                    <td><button class="btn btn-sm btn-danger">{{this.status}}</button></td>
+                    <td><button class="btn btn-sm btn-danger">Delete</button></td>
                 </tr>
                 {{/each}}
             </tbody>

@@ -12,6 +12,15 @@ const app = express();
 app.set("view engine", "hbs");
 app.set("views", __dirname + "/views");
 hbs.registerPartials(__dirname + "/views/partials");
+
+hbs.registerHelper("checkStatus", function (v1, v2, options) {
+  if (v1 === v2) {
+    return options.fn(this);
+  } else {
+    options.inverse(this);
+  }
+});
+
 app.use(middleware.logger);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

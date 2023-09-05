@@ -1,23 +1,29 @@
 const data = require("./data").data;
 const router = require("express").Router();
+const BlogService = require("../services/blogService");
 
-router.get("/", (req, res) => {
-  res.render("blogs", {
-    title: "Blogs",
-    layout: "layout",
-    navBlogs: true,
-  });
+router.get("/", (req, res, next) => {
+  BlogService.blogList()
+    .then((dt) => {
+      res.render("blogs", {
+        title: "Blogs",
+        navBlog: true,
+        layout: "layout",
+        blogs: dt,
+      });
+    })
+    .catch((err) => {
+      next(err);
+    });
 });
 
-router.get("/", (req, res) => {
-  let params = req.params.alias;
-  let title = params
-    .split("-")
-    .map((e) => e.slice(0, 1).toUpperCase() + e.slice(1))
-    .join(" ");
-  res.render("blogDetail", {
-    title: `Blog - ${title}`,
+router.get("/:alias", (req, res) => {
+  const alias = req.params.alias;
+  let dt = data.blogs[data.blogIndex[alias]];
+  res.render("projectDetail", {
+    title: "Blog Detail",
     layout: "layout",
+    project: dt,
   });
 });
 

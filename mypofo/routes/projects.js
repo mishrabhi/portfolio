@@ -16,14 +16,12 @@ router.get("/", (req, res, next) => {
       });
     }
   }
-  ProjectService.list(callback);
+  ProjectService.list(callback, { status: "active" });
 });
 
 router.get("/:alias", (req, res) => {
   const alias = req.params.alias;
-
   let dt = data.projects[data.projectIndex[alias]];
-
   res.render("projectDetail", {
     title: "Project Detail",
     layout: "layout",
