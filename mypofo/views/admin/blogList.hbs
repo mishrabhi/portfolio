@@ -4,8 +4,8 @@
         <h1 class="h2">Blogs</h1>
         <div class="btn-toolbar mb-2 mb-md-0">
             <div class="btn-group me-2">
-                <button type="button" class="btn btn-sm btn-outline-secondary">
-                    New Blog
+                <a href="/admin/blogs/create" class="btn btn-sm btn-outline-secondary">
+                    New Blog </a>
                 </button>
             </div>
         </div>
@@ -23,13 +23,14 @@
                 </tr>
             </thead>
             <tbody>
-                {{#each blog}}
+                {{#each blogs}}
                 <tr>
                     <td>
                         <img src="{{this.image}}" height="90" width="90" />
                     </td>
                     <td>
-                        {{this.name}}
+                        <a class="link-underline-light link-opacity-75-hover"
+                            href="/admin/blogs/{{this.alias}}">{{this.name}} </a>
                     </td>
                     <td>{{this.alias}}</td>
                     <td>

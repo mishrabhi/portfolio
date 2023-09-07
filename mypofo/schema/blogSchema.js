@@ -1,36 +1,52 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const blogSchema = new Schema({
-  name: {
-    type: "string",
-    required: true,
-  },
-  alias: {
-    type: "string",
-    required: true,
-    unique: true,
-  },
-  shortDescription: "string",
-  Description: String,
-  image: String,
-  tags: [{ name: String, class: String }],
-  relatedProjects: [
-    {
-      name: String,
-      link: String,
+const blogSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
     },
-  ],
-  createdOn: {
-    type: Date,
-    default: Date.now(),
+    alias: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    shortDescription: String,
+    description: String,
+    image: String,
+    relatedBlogs: [
+      {
+        name: String,
+        link: String,
+      },
+    ],
+    isFeatured: {
+      type: Boolean,
+      default: false,
+    },
+    blogCategory: {
+      type: String,
+      enum: [
+        "Technology",
+        "HTML",
+        "CSS",
+        "Javascript",
+        "Express",
+        "Mongodb",
+        "Node",
+      ],
+    },
+    author: String,
+    createdBy: mongoose.Types.ObjectId,
+    status: {
+      type: String,
+      required: true,
+      enum: ["active", "inactive"],
+      default: "active",
+    },
   },
-  updatedOn: Date,
-  createdBy: String,
-  status: {
-    type: String,
-    required: true,
-  },
-});
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("blogs", blogSchema);

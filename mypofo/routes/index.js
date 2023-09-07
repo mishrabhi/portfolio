@@ -26,7 +26,6 @@ router.get("/contact", (req, res) => {
 
 router.post("/contact", (req, res, next) => {
   let data = req.body;
-
   ContactService.create(data)
     .then((dt) => {
       res.render("contact", {
@@ -43,7 +42,7 @@ router.post("/contact", (req, res, next) => {
 
 router.get("/signin", (req, res) => {
   res.render("signin", {
-    title: "signin",
+    title: "Signin",
     layout: "loginLayout",
   });
 });
@@ -55,27 +54,8 @@ router.get("/signup", (req, res) => {
   });
 });
 
-// let user = [
-//   {
-//     name: "Ashutosh",
-//     email: "asmyselfashu@gmail.com",
-//     password: "test",
-//   },
-//   {
-//     name: "Raja",
-//     email: "raja@gmail.com",
-//     password: "test",
-//   },
-//   {
-//     name: "Abhishek",
-//     email: "asmyselfabhishek00@gmail.com",
-//     password: "test",
-//   },
-// ];
-
 router.post("/signup", (req, res, next) => {
   const bodyData = req.body;
-
   if (!bodyData || bodyData.name == "") {
     res.render("signup", {
       title: "Signup",
@@ -86,6 +66,7 @@ router.post("/signup", (req, res, next) => {
 
   UserService.createUser(bodyData)
     .then((dt) => {
+      console.log("User Created", dt);
       res.redirect("/signin");
     })
     .catch((err) => {
@@ -95,8 +76,7 @@ router.post("/signup", (req, res, next) => {
 
 router.post("/signin", (req, res) => {
   const data = req.body;
-  userService
-    .signin(data)
+  UserService.signin(data)
     .then((dt) => {
       req.session.isLoggedIn = true;
       req.session.user = dt;

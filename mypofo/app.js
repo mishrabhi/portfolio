@@ -1,4 +1,5 @@
 const express = require("express");
+const moment = require("moment");
 const hbs = require("hbs");
 const session = require("express-session");
 const mongoose = require("mongoose");
@@ -19,6 +20,10 @@ hbs.registerHelper("checkStatus", function (v1, v2, options) {
   } else {
     options.inverse(this);
   }
+});
+
+hbs.registerHelper("convertDate", function (v1, options) {
+  return moment(v1).format("MMM, DD");
 });
 
 app.use(middleware.logger);

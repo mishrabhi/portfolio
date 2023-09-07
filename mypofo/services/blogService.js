@@ -1,21 +1,66 @@
 const Blog = require("../schema/blogSchema");
 
-module.exports.create = (data) => {
-  let blogs = new Blog(data);
-  blogs
-    .save()
-    .then((dt) => {
-      console.log("Data Saved Success", dt);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+exports.create = (data) => {
+  return new Promise((resolve, reject) => {
+    let newBlog = new Blog(data);
+    newBlog
+      .save()
+      .then((dt) => {
+        resolve(dt);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 };
 
-module.exports.blogList = () => {
+exports.blogList = (filter, limit) => {
   return new Promise((resolve, reject) => {
-    Blog.find()
+    Blog.find(filter)
+      .sort({ createdAt: -1 })
+      .limit(limit)
       .then((dt) => {
+        resolve(dt);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+exports.getOne = (alias) => {
+  return new Promise((resolve, reject) => {
+    Blog.findOne({ alias: alias })
+      .then((dt) => {
+        resolve(dt);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+exports.deleteBlog = (alias) => {
+  return new Promise((resolve, reject) => {
+    Blog.findOneAndDelete({ alias: alias })
+      .then((dt) => {
+        resolve(dt);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+};
+
+exports.updateBlog = (alias, dt) => {
+  return new Promise((resolve, reject) => {
+    Blog.findOneAndUpdate(
+      { alias: alias },
+      { $set: dt, $inc: { __v: 1 } },
+      { new: true }
+    )
+      .then((dt) => {
+        console.log("Updated Data", dt);
         resolve(dt);
       })
       .catch((err) => {

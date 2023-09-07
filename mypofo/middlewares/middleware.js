@@ -3,13 +3,19 @@ exports.logger = (req, res, next) => {
   next();
 };
 
-module.exports.notFound = (req, res, next) => {
-  res.status(404).send("Page Not Found");
+exports.notFound = (req, res, next) => {
+  res.status(404).render("notFound", {
+    title: "Page Not Found",
+    layout: "loginLayout",
+  });
 };
 
-module.exports.handleError = (err, req, res, next) => {
+exports.handleError = (err, req, res, next) => {
   console.log(err);
-  res.status(500).send("Something Went Wrong");
+  res.status(500).render("500", {
+    title: "Internal Server Error!",
+    layout: "loginLayout",
+  });
 };
 
 exports.authenticate = (req, res, next) => {

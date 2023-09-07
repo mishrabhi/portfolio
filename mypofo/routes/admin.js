@@ -1,12 +1,25 @@
 const router = require("express").Router();
 const ContactService = require("../services/contactService");
 const ProjectService = require("../services/projectService");
-// const BlogService = require("../services/blogService");
+const BlogService = require("../services/blogService");
 
 router.get("/", (req, res) => {
   res.render("admin/index", {
     layout: "adminLayout",
   });
+});
+
+router.get("/contacts", (req, res, next) => {
+  ContactService.contactList()
+    .then((dt) => {
+      res.render("admin/contactList", {
+        layout: "adminLayout",
+        contacts: dt,
+      });
+    })
+    .catch((err) => {
+      next(err);
+    });
 });
 
 router.get("/projects", (req, res, next) => {
@@ -23,33 +36,7 @@ router.get("/projects", (req, res, next) => {
   ProjectService.list(cb, {});
 });
 
-router.get("/contacts", (req, res, next) => {
-  ContactService.contactList()
-    .then((dt) => {
-      res.render("admin/contactList", {
-        layout: "adminLayout",
-        contacts: dt,
-      });
-    })
-    .catch((err) => {
-      next(err);
-    });
-});
-
-// router.get("/blogs", (req, res, next) => {
-//   BlogService.blogList()
-//     .then((dt) => {
-//       res.render("admin/blogList", {
-//         layout: "adminLayout",
-//         blogs: dt,
-//       });
-//     })
-//     .catch((err) => {
-//       next(err);
-//     });
-// });
-
-router.get("projects/create", (req, res) => {
+router.get("/projects/create", (req, res) => {
   res.render("admin/projectCreate", {
     layout: "adminLayout",
   });
@@ -92,7 +79,7 @@ router.get("/projects/:alias", (req, res, next) => {
     });
 });
 
-router.get("projects/:alias/delete", (req, res, next) => {
+router.get("/projects/:alias/delete", (req, res, next) => {
   const alias = req.params.alias;
   ProjectService.deleteProject(alias)
     .then((dt) => {
@@ -116,11 +103,81 @@ router.post("/projects/:alias/update", (req, res, next) => {
     });
   }
   bodyData.tags = finalTags;
-  bodyData.alias = bodyData.name.LowerCase().split(" ").join("-");
+  bodyData.alias = bodyData.name.toLowerCase().split(" ").join("-");
 
   ProjectService.updateProject(alias, bodyData)
     .then((dt) => {
       res.redirect("/admin/projects");
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.get("/blogs", (req, res, next) => {
+  BlogService.blogList({})
+    .then((dt) => {
+      res.render("admin/blogList", {
+        layout: "adminLayout",
+        blogs: dt,
+      });
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.get("/blogs/create", (req, res) => {
+  res.render("admin/blogCreate", {
+    layout: "adminLayout",
+  });
+});
+
+router.post("/blogs/create", (req, res, next) => {
+  let bodyData = req.body;
+  bodyData.alias = bodyData.name.toLowerCase().split(" ").join("-");
+  bodyData.author = req.session.user.name;
+  bodyData.createdBy = req.session.user._id;
+  BlogService.create(bodyData)
+    .then((dt) => {
+      res.redirect("/admin/blogs");
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.get("blogs/:alias", (req, res, next) => {
+  const alias = req.params.alias;
+  BlogService.getOne(alias)
+    .then((dt) => {
+      res.render("admin/blogDetail", {
+        layout: "adminLayout",
+        blog: dt,
+      });
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.get("blogs/:alias/delete", (req, res, next) => {
+  const alias = req.params.alias;
+  BlogService.deleteBlog(alias)
+    .then((dt) => {
+      res.redirect("/admin/blogs");
+    })
+    .catch((err) => {
+      nect(err);
+    });
+});
+
+router.post("/blogs/:alias/update", (req, res, next) => {
+  const alias = req.params.alias;
+  const bodyData = req.body;
+  BlogService.updateBlog(alias, bodyData)
+    .then((dt) => {
+      res.redirect("/admin/blogs");
     })
     .catch((err) => {
       next(err);

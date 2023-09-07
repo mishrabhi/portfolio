@@ -1,0 +1,63 @@
+<main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Blogs</h1>
+        <div class="btn-toolbar mb-2 mb-md-0">
+        </div>
+    </div>
+
+    <form action="/admin/blogs/create" method="POST">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" id="name" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="shortDes">Short-Description</label>
+                    <input type="text" id="shortDes" name="shortDescription" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="category">Blog-Category</label>
+                    <select class="form-select form-select-md mb-3" id="category" name="blogCategory"
+                        aria-label="Large select example">
+                        <option selected>Please choose Category</option>
+                        <option value="javascript">Javascript</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                        <option value="mongodb">MongoDB</option>
+                        <option value="node">Node</option>
+                        <option value="express">Express</option>
+                        <option value="bootstrap">Bootstrap</option>
+
+                    </select>
+                    {{!-- <input type="text" name="blog-category" class="form-control" value=""> --}}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="featured">Featured</label>
+                    <select class="form-select form-select-md mb-3" id="featured" name="isFeatured"
+                        aria-label="Large select example">
+                        <option value="false" selected>False</option>
+                        <option value="true">True</option>
+                    </select>
+                    {{!-- <input type="text" name="blog-category" class="form-control" value=""> --}}
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea type="text" rows="5" name="description" id="description" class="form-control"></textarea>
+                </div>
+            </div>
+
+
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+    </form>
+</main>
