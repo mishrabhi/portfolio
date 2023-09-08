@@ -30,13 +30,15 @@
                     </td>
                     <td>
                         <a class="link-underline-light link-opacity-75-hover"
-                            href="/admin/blogs/{{this.alias}}">{{this.name}} </a>
+                            href="/admin/blogs/{{this.alias}}">{{this.name}}
+                        </a>
                     </td>
                     <td>{{this.alias}}</td>
                     <td>
                         {{this.shortDescription}}
                     </td>
-                    <td><button class="btn btn-sm btn-danger">Delete</button></td>
+                    <td><a href="/admin/blogs/{{blog.alias}}/delete"> <button
+                                class="btn btn-sm btn-danger">Delete</button></a></td>
                 </tr>
                 {{/each}}
             </tbody>

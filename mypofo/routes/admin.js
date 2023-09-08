@@ -147,7 +147,7 @@ router.post("/blogs/create", (req, res, next) => {
     });
 });
 
-router.get("blogs/:alias", (req, res, next) => {
+router.get("/blogs/:alias", (req, res, next) => {
   const alias = req.params.alias;
   BlogService.getOne(alias)
     .then((dt) => {
@@ -161,14 +161,14 @@ router.get("blogs/:alias", (req, res, next) => {
     });
 });
 
-router.get("blogs/:alias/delete", (req, res, next) => {
+router.get("/blogs/:alias/delete", (req, res, next) => {
   const alias = req.params.alias;
   BlogService.deleteBlog(alias)
     .then((dt) => {
       res.redirect("/admin/blogs");
     })
     .catch((err) => {
-      nect(err);
+      next(err);
     });
 });
 
