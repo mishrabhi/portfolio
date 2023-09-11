@@ -1,7 +1,20 @@
 const router = require("express").Router();
+const multer = require("multer");
+const path = require("path");
 const ContactService = require("../services/contactService");
 const ProjectService = require("../services/projectService");
 const BlogService = require("../services/blogService");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "../static/images"));
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 router.get("/", (req, res) => {
   res.render("admin/index", {
@@ -114,6 +127,30 @@ router.post("/projects/:alias/update", (req, res, next) => {
     });
 });
 
+router.get("/projects/:alias/upload", (req, res) => {
+  res.render("admin/upload", {
+    layout: "adminLayout",
+    path: `/admin/projects/${req.params.alias}/upload`,
+  });
+});
+
+router.post(
+  "/projects/:alias/upload",
+  upload.single("img"),
+  (req, res, next) => {
+    let fileData = req.file;
+    ProjectService.updateProject(req.params.alias, {
+      image: `/images/${fileData.filename}`,
+    })
+      .then((dt) => {
+        res.redirect("/admin/projects");
+      })
+      .catch((err) => {
+        next(err);
+      });
+  }
+);
+
 router.get("/blogs", (req, res, next) => {
   BlogService.blogList({})
     .then((dt) => {
@@ -176,6 +213,26 @@ router.post("/blogs/:alias/update", (req, res, next) => {
   const alias = req.params.alias;
   const bodyData = req.body;
   BlogService.updateBlog(alias, bodyData)
+    .then((dt) => {
+      res.redirect("/admin/blogs");
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.get("/blogs/:alias/upload", (req, res) => {
+  res.render("admin/upload", {
+    layout: "adminLayout",
+    path: `/admin/blogs/${req.params.alias}/upload`,
+  });
+});
+
+router.post("/blogs/:alias/upload", upload.single("img"), (req, res, next) => {
+  let fileData = req.file;
+  BlogService.updateBlog(req.params.alias, {
+    image: `/images/${fileData.filename}`,
+  })
     .then((dt) => {
       res.redirect("/admin/blogs");
     })

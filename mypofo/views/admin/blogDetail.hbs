@@ -6,6 +6,8 @@
             <div class="btn-group me-2">
                 <a href="/admin/blogs/create" class="btn btn-sm btn-outline-secondary">
                     New Blog </a>
+                <a href="/admin/blogs/{{blog.alias}}/upload" class="btn btn-sm btn-outline-secondary">
+                    Upload Image </a>
                 <a href="/admin/blogs/{{blog.alias}}/delete" class="btn btn-sm btn-outline-danger">Delete</a>
             </div>
         </div>
@@ -33,8 +35,20 @@
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <label for="name">Blog-Category</label>
-                    <input type="text" name="blog-category" class="form-control" value="{{blog.blog-category}}" />
+                    <label for="category">Blog-Category</label>
+                    <select class="form-select form-select-md mb-3" id="category" name="blogCategory"
+                        aria-label="Large select example">
+                        <option selected>Please choose Category</option>
+                        <option value="javascript">Javascript</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                        <option value="mongodb">MongoDB</option>
+                        <option value="node">Node</option>
+                        <option value="express">Express</option>
+                        <option value="bootstrap">Bootstrap</option>
+
+                    </select>
+                    {{!-- <input type="text" name="blog-category" class="form-control" value=""> --}}
                 </div>
             </div>
             <div class="col-md-6">
