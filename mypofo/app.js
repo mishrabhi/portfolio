@@ -27,6 +27,8 @@ hbs.registerHelper("convertDate", function (v1, options) {
 });
 
 app.use(middleware.logger);
+
+//body parser (reads body data and attaches in req object - so that we can use req.body)
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
