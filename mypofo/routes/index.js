@@ -1,132 +1,104 @@
 const data = require("./data").data;
+const router = require("express").Router();
+const ContactService = require("../services/contactService");
+const BlogService = require("../services/blogService");
+const UserService = require("../services/userService");
 
-exports.index = (req, res) => {
+exports.createProject = (req, res) => {
+  let data = req.body;
+  ProjectService.create(data);
+};
+
+router.get("/", (req, res) => {
   res.render("home", {
     title: "Abhishek - Portfolio",
     layout: "homeLayout",
   });
-};
+});
 
-exports.projectList = (req, res) => {
-  res.render("projects", {
-    title: "Projects",
-    navProject: true,
-    layout: "layout",
-    projects: data.projects,
-  });
-};
-
-exports.blogs = (req, res) => {
-  res.render("blogs", {
-    title: "Blogs",
-    layout: "layout",
-    navBlogs: true,
-  });
-};
-
-exports.contact = (req, res) => {
+router.get("/contact", (req, res) => {
   res.render("contact", {
     title: "contact",
     layout: "layout",
     navContact: true,
   });
-};
+});
 
-exports.projectDetail = (req, res) => {
-  const alias = req.params.alias;
+router.post("/contact", (req, res, next) => {
+  let data = req.body;
+  ContactService.create(data)
+    .then((dt) => {
+      res.render("contact", {
+        title: "Contact",
+        layout: "layout",
+        navContact: true,
+        message: "Request submitted Successfully",
+      });
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
 
-  let dt = data.project[data.projectIndex[alias]];
-
-  res.render("projectDetail", {
-    title: "Project Detail",
-    layout: "layout",
-    project: dt,
-  });
-};
-
-exports.blogDetail = (req, res) => {
-  let params = req.params.alias;
-  let title = params
-    .split("-")
-    .map((e) => e.slice(0, 1).toUpperCase() + e.slice(1))
-    .join(" ");
-  res.render("blogDetail", {
-    title: `Blog - ${title}`,
-    layout: "layout",
-  });
-};
-
-exports.signIn = (req, res) => {
+router.get("/signin", (req, res) => {
   res.render("signin", {
-    title: "signin",
+    title: "Signin",
     layout: "loginLayout",
   });
-};
+});
 
-exports.signUp = (req, res) => {
+router.get("/signup", (req, res) => {
   res.render("signup", {
     title: "Signup",
     layout: "loginlayout",
   });
-};
+});
 
-exports.admin = (req, res) => {
-  res.render("admin/index", {
-    layout: "adminLayout",
-  });
-};
-
-exports.adminProjectList = (req, res) => {
-  res.render("admin/projectList", {
-    layout: "adminLayout",
-    projects: data.projects,
-  });
-};
-
-let user = [
-  {
-    name: "Ashutosh",
-    email: "asmyselfashu@gmail.com",
-    password: "test",
-  },
-  {
-    name: "Raja",
-    email: "raja@gmail.com",
-    password: "test",
-  },
-  {
-    name: "Abhishek",
-    email: "asmyselfabhishek00@gmail.com",
-    password: "test",
-  },
-];
-
-exports.doSignin = (req, res) => {
-  const data = req.body;
-  let findUser = user.filter((e) => e.email == data.email);
-  if (findUser.length > 0) {
-    if (findUser[0].password === data.password) {
-      req.session.isLoggedIn = true;
-      req.session.user = findUser[0];
-      res.redirect("/admin");
-    } else {
-      res.render("signin", {
-        title: "Signin",
-        layout: "loginLayout",
-        message: "Email or password is incorrect",
-      });
-    }
-  } else {
-    res.render("signin", {
-      title: "Signin",
+router.post("/signup", (req, res, next) => {
+  const bodyData = req.body;
+  if (!bodyData || bodyData.name == "") {
+    res.render("signup", {
+      title: "Signup",
       layout: "loginLayout",
-      message: "Email or password is incorrect",
+      message: "Name Field is required",
     });
   }
-};
 
-exports.logout = (req, res) => {
+  UserService.createUser(bodyData)
+    .then((dt) => {
+      console.log("User Created", dt);
+      res.redirect("/signin");
+    })
+    .catch((err) => {
+      next(err);
+    });
+});
+
+router.post("/signin", (req, res) => {
+  const data = req.body;
+  UserService.signin(data)
+    .then((dt) => {
+      req.session.isLoggedIn = true;
+      req.session.user = dt;
+      res.redirect("/admin");
+    })
+    .catch((err) => {
+      if (err.message == "Credentials are not Correct") {
+        res.render("signin", {
+          title: "Signin",
+          layout: "loginLayout",
+          message: "Email or password is incorrect",
+        });
+      } else {
+        next(err);
+      }
+    });
+});
+
+router.get("/logout", (req, res) => {
   req.session.isLoggedIn = false;
   delete res.locals.user;
   res.redirect("/");
-};
+});
+
+module.exports = router;

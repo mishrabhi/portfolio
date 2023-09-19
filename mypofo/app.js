@@ -1,16 +1,45 @@
 const express = require("express");
+const moment = require("moment");
 const hbs = require("hbs");
 const session = require("express-session");
+const mongoose = require("mongoose");
 const middleware = require("./middlewares/middleware");
-const routes = require("./routes");
+const index = require("./routes/index");
+const projectRoutes = require("./routes/projects");
+const blogRoutes = require("./routes/blogs");
+const adminRoutes = require("./routes/admin");
 const app = express();
 
 app.set("view engine", "hbs");
 app.set("views", __dirname + "/views");
 hbs.registerPartials(__dirname + "/views/partials");
+
+hbs.registerHelper("checkStatus", function (v1, v2, options) {
+  if (v1 === v2) {
+    return options.fn(this);
+  } else {
+    options.inverse(this);
+  }
+});
+
+hbs.registerHelper("convertDate", function (v1, options) {
+  return moment(v1).format("MMM, DD");
+});
+
 app.use(middleware.logger);
+
+//body parser (reads body data and attaches in req object - so that we can use req.body)
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+mongoose
+  .connect("mongodb://127.0.0.1:27017/mypofo")
+  .then((dt) => {
+    console.log("DB Connected Successfully");
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 
 app.use(
   session({
@@ -24,20 +53,10 @@ app.use(
 app.use(express.static(__dirname + "/static"));
 app.use(middleware.authenticated);
 
-app.get("/", routes.index);
-app.get("/projects", routes.projectList);
-app.get("/blogs", routes.blogs);
-app.get("/contact", routes.contact);
-app.get("/signin", routes.signIn);
-app.post("/signin", routes.doSignin);
-app.get("/signup", routes.signUp);
-app.get("/logout", routes.logout);
-app.get("/projects/:alias", middleware.authenticate, routes.projectDetail);
-app.get("/blogs/:alias", middleware.authenticate, routes.blogDetail);
-
-// admin routes
-app.get("/admin", middleware.authenticate, routes.admin);
-app.get("/admin/projects", middleware.authenticate, routes.adminProjectList);
+app.use("/", index);
+app.use("/projects", projectRoutes);
+app.use("/blogs", blogRoutes);
+app.use("/admin", middleware.authenticate, adminRoutes);
 
 app.use(middleware.notFound);
 app.use(middleware.handleError);
