@@ -1,4 +1,5 @@
 const Blog = require("../schema/blogSchema");
+const axios = require("axios");
 
 exports.create = (data) => {
   return new Promise((resolve, reject) => {
@@ -14,13 +15,24 @@ exports.create = (data) => {
   });
 };
 
-exports.blogList = (filter, limit) => {
+exports.blogList = (filter) => {
+  const headers = {
+    "x-access-apiKey": "f02032c1-3099-45df-b7b9-f18d86c633f8",
+  };
+  let uri = "http://localhost:3100/api/blogs";
+  if (filter.blogCategory) {
+    uri = `http://localhost:3100/api/blogs?blogCategory=${filter.blogCategory}`;
+  }
+  console.log(uri);
   return new Promise((resolve, reject) => {
-    Blog.find(filter)
-      .sort({ createdAt: -1 })
-      .limit(limit)
-      .then((dt) => {
-        resolve(dt);
+    axios
+      .get(uri, { headers: headers })
+      .then((resp) => {
+        if (resp.status === 200) {
+          resolve(resp.data);
+        } else {
+          reject(resp.data);
+        }
       })
       .catch((err) => {
         reject(err);
