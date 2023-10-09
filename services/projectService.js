@@ -1,4 +1,5 @@
 const Project = require("../schema/projectSchema");
+const axios = require("axios");
 
 exports.create = (data) => {
   return new Promise((resolve, reject) => {
@@ -14,22 +15,42 @@ exports.create = (data) => {
   });
 };
 
-exports.list = (cb, filter) => {
-  Project.find(filter)
-    .then((dt) => {
-      console.log("Data from DB", dt);
-      cb(null, dt);
-    })
-    .catch((err) => {
-      cb(err, null);
-    });
+exports.projectList = () => {
+  const headers = {
+    "x-access-apiKey": "f02032c1-3099-45df-b7b9-f18d86c633f8",
+  };
+  let uri = "http://localhost:3100/api/projects";
+  console.log(uri);
+  return new Promise((resolve, reject) => {
+    axios
+      .get(uri, { headers: headers })
+      .then((resp) => {
+        if (resp.status === 200) {
+          resolve(resp.data);
+        } else {
+          reject(resp.data);
+        }
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 };
 
 exports.getOne = (alias) => {
+  const headers = {
+    "x-access-apiKey": "f02032c1-3099-45df-b7b9-f18d86c633f8",
+  };
+  let uri = `http://localhost:3100/api/projects/${alias}`;
   return new Promise((resolve, reject) => {
-    Project.findOne({ alias: alias })
-      .then((dt) => {
-        resolve(dt);
+    axios
+      .get(uri, { headers: headers })
+      .then((resp) => {
+        if (resp.status === 200) {
+          resolve(resp.data);
+        } else {
+          reject(resp.data);
+        }
       })
       .catch((err) => {
         reject(err);
