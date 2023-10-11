@@ -6,6 +6,7 @@ function submitForm(e) {
   let data = {
     name: document.querySelector("#name").value,
     email: document.querySelector("#ExampleInputEmail").value,
+    contact: document.querySelector("#contact").value,
     description: document.querySelector("#description").value,
   };
   fetch("http://localhost:3100/api/contacts", {

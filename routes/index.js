@@ -79,15 +79,17 @@ router.post("/signin", (req, res) => {
   UserService.signin(data)
     .then((dt) => {
       req.session.isLoggedIn = true;
-      req.session.user = dt;
+      req.session.user = dt.data;
+      req.session.token = dt.token;
+      console.log(req.session);
       res.redirect("/admin");
     })
     .catch((err) => {
-      if (err.message == "Credentials are not Correct") {
+      if (err.code == "ERR_BAD_REQUEST") {
         res.render("signin", {
           title: "Signin",
           layout: "loginLayout",
-          message: "Email or password is incorrect",
+          message: "Credentials are not correct",
         });
       } else {
         next(err);
@@ -97,6 +99,7 @@ router.post("/signin", (req, res) => {
 
 router.get("/logout", (req, res) => {
   req.session.isLoggedIn = false;
+  req.session.token = "";
   delete res.locals.user;
   res.redirect("/");
 });

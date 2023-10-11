@@ -13,7 +13,7 @@ const contactSchema = new Schema(
       trim: true,
     },
     description: String,
-    phone: {
+    contact: {
       type: Number,
     },
   },

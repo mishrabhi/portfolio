@@ -26,7 +26,7 @@ router.get("/:alias", (req, res) => {
     .then((data) => {
       console.log(data.data);
       res.render("projectDetail", {
-        title: `Project - ${alias}`,
+        title: `${alias}`,
         layout: "layout",
         project: data.data,
       });
