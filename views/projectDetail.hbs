@@ -21,7 +21,7 @@
                         <div>
                             <h1>Tags</h1>
                             {{#each project.tags}}
-                            <span class="badge text-bg-{{this.class}}">{{this.name}}</span>
+                            <span class="badge text-bg-{{this.class}}">{{this.title}}</span>
                             {{/each}}
                         </div>
                     </div>
@@ -31,12 +31,12 @@
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="/">Home</a></li>
                             <li class="breadcrumb-item"><a href="/projects">Projects</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">{{project.name}}</li>
+                            <li class="breadcrumb-item active" aria-current="page">{{project.title}}</li>
                         </ol>
                     </nav>
-                    <h1>{{project.name}}</h1>
+                    <h1>{{project.title}}</h1>
                     <p>{{project.description}}</p>
-                    <img src="{{project.image}}" alt="{{this.name}}" srcset="" />
+                    <img src="{{project.image}}" alt="{{this.title}}" srcset="" />
                 </div>
 
             </div>

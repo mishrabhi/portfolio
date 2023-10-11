@@ -3,30 +3,37 @@ const router = require("express").Router();
 const ProjectService = require("../services/projectService");
 
 router.get("/", (req, res, next) => {
-  function callback(err, dt) {
-    if (err) {
-      console.log(err);
-      next(err);
-    } else {
+  ProjectService.projectList()
+    .then((data) => {
+      console.log(data.data);
       res.render("projects", {
         title: "Projects",
         navproject: true,
         layout: "layout",
-        projects: dt,
+        projects: data.data.data,
       });
-    }
-  }
-  ProjectService.list(callback, { status: "active" });
+    })
+    .catch((err) => {
+      next(err);
+    });
+  // ProjectService.projectList(callback, { status: "active" });
 });
 
 router.get("/:alias", (req, res) => {
   const alias = req.params.alias;
-  let dt = data.projects[data.projectIndex[alias]];
-  res.render("projectDetail", {
-    title: "Project Detail",
-    layout: "layout",
-    project: dt,
-  });
+  // let dt = data.projects[data.projectIndex[alias]];
+  ProjectService.getOne(alias)
+    .then((data) => {
+      console.log(data.data);
+      res.render("projectDetail", {
+        title: `${alias}`,
+        layout: "layout",
+        project: data.data,
+      });
+    })
+    .catch((err) => {
+      reject(err);
+    });
 });
 
 module.exports = router;

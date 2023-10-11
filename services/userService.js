@@ -1,4 +1,5 @@
 const User = require("../schema/userSchema");
+const axios = require("axios");
 
 exports.createUser = (data) => {
   return new Promise((resolve, reject) => {
@@ -15,18 +16,18 @@ exports.createUser = (data) => {
 };
 
 exports.signin = (bodyData) => {
+  const headers = {
+    "Content-Type": "application/json",
+    // authorisation: `Bearer ${req.session.token}`,
+  };
+  const url = `http://localhost:3100/auth/signin`;
+
   return new Promise((resolve, reject) => {
-    User.findOne({ email: bodyData.email })
-      .then((dt) => {
-        if (dt && dt != null) {
-          if (dt.password === bodyData.password) {
-            resolve(dt);
-          } else {
-            reject(new Error("Credentials are not Correct"));
-          }
-        } else {
-          reject(new Error("Credentials are not Correct"));
-        }
+    axios
+      .post(url, bodyData, { header: headers })
+      .then((resp) => {
+        console.log("success");
+        resolve(resp.data);
       })
       .catch((err) => {
         reject(err);
