@@ -33,7 +33,7 @@ const blogSchema = new Schema(
         "CSS",
         "Javascript",
         "Express",
-        "Mongodb",
+        "MongoDB",
         "Node",
       ],
     },

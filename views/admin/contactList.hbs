@@ -16,7 +16,7 @@
                     <th scope="col">Description</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="contactList">
                 {{#each contacts}}
                 <tr>
                     <td>
@@ -27,6 +27,8 @@
                         {{this.contact}}
                     </td>
                     <td>{{this.description}}</td>
+                    <td><button class="btn btn-danger btn-sm contactDelete">Delete</button>
+                    </td>
                 </tr>
                 {{/each}}
             </tbody>
