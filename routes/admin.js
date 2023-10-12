@@ -35,20 +35,6 @@ router.get("/contacts", (req, res, next) => {
     });
 });
 
-// router.get("/projects", (req, res, next) => {
-//   function cb(err, dt) {
-//     if (err) {
-//       next(err);
-//     } else {
-//       res.render("admin/projectList", {
-//         layout: "adminLayout",
-//         projects: dt,
-//       });
-//     }
-//   }
-//   ProjectService.list(cb, {});
-// });
-
 router.get("/projects", (req, res, next) => {
   ProjectService.projectList()
     .then((dt) => {
@@ -98,7 +84,7 @@ router.get("/projects/:alias", (req, res, next) => {
     .then((dt) => {
       res.render("admin/projectDetail", {
         layout: "adminlayout",
-        project: dt,
+        project: dt.data,
       });
     })
     .catch((err) => {
@@ -190,7 +176,8 @@ router.post("/blogs/create", (req, res, next) => {
   bodyData.alias = bodyData.name.toLowerCase().split(" ").join("-");
   bodyData.author = req.session.user.name;
   bodyData.createdBy = req.session.user._id;
-  BlogService.create(bodyData)
+  console.log(req.session);
+  BlogService.create(bodyData, req.session.token)
     .then((dt) => {
       res.redirect("/admin/blogs");
     })
@@ -205,7 +192,7 @@ router.get("/blogs/:alias", (req, res, next) => {
     .then((dt) => {
       res.render("admin/blogDetail", {
         layout: "adminLayout",
-        blog: dt,
+        blog: dt.data,
       });
     })
     .catch((err) => {
