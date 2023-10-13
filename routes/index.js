@@ -3,6 +3,7 @@ const router = require("express").Router();
 const ContactService = require("../services/contactService");
 const BlogService = require("../services/blogService");
 const UserService = require("../services/userService");
+const path = require("path");
 
 exports.createProject = (req, res) => {
   let data = req.body;
@@ -102,6 +103,10 @@ router.get("/logout", (req, res) => {
   req.session.token = "";
   delete res.locals.user;
   res.redirect("/");
+});
+
+router.get("/resume", (req, res) => {
+  res.download(path.join(__dirname, "../static/Abhishek-Mishra-DSU_2023.pdf"));
 });
 
 module.exports = router;
