@@ -1,18 +1,17 @@
 const Blog = require("../schema/blogSchema");
 const axios = require("axios");
 
+//Create Blog
 exports.create = (data, token) => {
-  console.log(token);
   const headers = {
     Authorization: `Bearer ${token}`,
   };
   let uri = "http://localhost:3100/api/blogs";
-  console.log(uri);
   return new Promise((resolve, reject) => {
     axios
-      .get(uri, { headers: headers })
+      .post(uri, data, { headers: headers })
       .then((resp) => {
-        if (resp.status === 200) {
+        if (resp.status === 201) {
           resolve(resp.data);
         } else {
           reject(resp.data);
@@ -24,6 +23,7 @@ exports.create = (data, token) => {
   });
 };
 
+//Blog List
 exports.blogList = (filter) => {
   const headers = {
     "x-access-apiKey": "f02032c1-3099-45df-b7b9-f18d86c633f8",
@@ -49,6 +49,7 @@ exports.blogList = (filter) => {
   });
 };
 
+//Get one Blog
 exports.getOne = (alias) => {
   const headers = {
     "x-access-apiKey": "f02032c1-3099-45df-b7b9-f18d86c633f8",
@@ -70,29 +71,18 @@ exports.getOne = (alias) => {
   });
 };
 
-// exports.deleteBlog = (alias) => {
-//   return new Promise((resolve, reject) => {
-//     Blog.findOneAndDelete({ alias: alias })
-//       .then((dt) => {
-//         resolve(dt);
-//       })
-//       .catch((err) => {
-//         reject(err);
-//       });
-//   });
-// };
-
-exports.deleteBlog = (alias) => {
+//Delete Blog
+exports.deleteBlog = (alias, token) => {
   const headers = {
-    "x-access-apiKey": "f02032c1-3099-45df-b7b9-f18d86c633f8",
+    Authorization: `Bearer ${token}`,
   };
-  let uri = `localhost:3100/api/blogs/${alias}`;
+  let uri = `http://localhost:3100/api/blogs/${alias}`;
   console.log(uri);
   return new Promise((resolve, reject) => {
     axios
-      .get(uri, { headers: headers })
+      .delete(uri, { headers: headers })
       .then((resp) => {
-        if (resp.status === 200) {
+        if (resp.status === 204) {
           resolve(resp.data);
         } else {
           reject(resp.data);
@@ -104,32 +94,16 @@ exports.deleteBlog = (alias) => {
   });
 };
 
-// exports.updateBlog = (alias, dt) => {
-//   return new Promise((resolve, reject) => {
-//     Blog.findOneAndUpdate(
-//       { alias: alias },
-//       { $set: dt, $inc: { __v: 1 } },
-//       { new: true }
-//     )
-//       .then((dt) => {
-//         console.log("Updated Data", dt);
-//         resolve(dt);
-//       })
-//       .catch((err) => {
-//         reject(err);
-//       });
-//   });
-// };
-
-exports.updateBlog = (alias, dt) => {
+//Update Blog
+exports.updateBlog = (alias, data, token) => {
   const headers = {
-    "x-access-apiKey": "f02032c1-3099-45df-b7b9-f18d86c633f8",
+    Authorization: `Bearer ${token}`,
   };
-  let uri = `localhost:3100/api/blogs/${alias}`;
+  let uri = `http://localhost:3100/api/blogs/${alias}`;
   console.log(uri);
   return new Promise((resolve, reject) => {
     axios
-      .get(uri, { headers: headers })
+      .put(uri, data, { headers: headers })
       .then((resp) => {
         if (resp.status === 200) {
           resolve(resp.data);

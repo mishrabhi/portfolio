@@ -173,10 +173,8 @@ router.get("/blogs/create", (req, res) => {
 
 router.post("/blogs/create", (req, res, next) => {
   let bodyData = req.body;
-  bodyData.alias = bodyData.name.toLowerCase().split(" ").join("-");
   bodyData.author = req.session.user.name;
   bodyData.createdBy = req.session.user._id;
-  console.log(req.session);
   BlogService.create(bodyData, req.session.token)
     .then((dt) => {
       res.redirect("/admin/blogs");
@@ -202,7 +200,7 @@ router.get("/blogs/:alias", (req, res, next) => {
 
 router.get("/blogs/:alias/delete", (req, res, next) => {
   const alias = req.params.alias;
-  BlogService.deleteBlog(alias)
+  BlogService.deleteBlog(alias, req.session.token)
     .then((dt) => {
       res.redirect("/admin/blogs");
     })
@@ -214,7 +212,7 @@ router.get("/blogs/:alias/delete", (req, res, next) => {
 router.post("/blogs/:alias/update", (req, res, next) => {
   const alias = req.params.alias;
   const bodyData = req.body;
-  BlogService.updateBlog(alias, bodyData)
+  BlogService.updateBlog(alias, bodyData, req.session.token)
     .then((dt) => {
       res.redirect("/admin/blogs");
     })
