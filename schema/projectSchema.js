@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = require("mongoose").Schema;
 
 const projectSchema = new Schema({
-  name: {
+  title: {
     type: "string",
     required: true,
     validate: {

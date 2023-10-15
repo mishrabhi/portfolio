@@ -77,7 +77,6 @@ exports.deleteBlog = (alias, token) => {
     Authorization: `Bearer ${token}`,
   };
   let uri = `http://localhost:3100/api/blogs/${alias}`;
-  console.log(uri);
   return new Promise((resolve, reject) => {
     axios
       .delete(uri, { headers: headers })
