@@ -1,13 +1,21 @@
 const Project = require("../schema/projectSchema");
 const axios = require("axios");
 
-exports.create = (data) => {
+exports.create = (data, token) => {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+  let uri = `http://localhost:3100/api/projects`;
+  console.log(uri);
   return new Promise((resolve, reject) => {
-    let newProject = new Project(data);
-    newProject
-      .save()
-      .then((dt) => {
-        resolve(dt);
+    axios
+      .post(uri, data, { headers: headers })
+      .then((resp) => {
+        if (resp.status === 201) {
+          resolve(resp.data);
+        } else {
+          reject(resp.data);
+        }
       })
       .catch((err) => {
         reject(err);

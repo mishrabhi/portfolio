@@ -22,6 +22,7 @@ router.get("/", (req, res) => {
   });
 });
 
+//Contacts
 router.get("/contacts", (req, res, next) => {
   ContactService.contactList()
     .then((dt) => {
@@ -35,6 +36,7 @@ router.get("/contacts", (req, res, next) => {
     });
 });
 
+//Projects
 router.get("/projects", (req, res, next) => {
   ProjectService.projectList()
     .then((dt) => {
@@ -66,10 +68,9 @@ router.post("/projects/create", (req, res, next) => {
       return { name: e, class: classes[i] };
     });
   }
-
   bodyData.tags = finalTags;
-  bodyData.alias = bodyData.name.toLowerCase().split(" ").join("-");
-  ProjectService.create(bodyData)
+  // bodyData.alias = bodyData.name.toLowerCase().split(" ").join("-");
+  ProjectService.create(bodyData, req.session.token)
     .then((dt) => {
       res.redirect("/admin/projects");
     })
@@ -151,6 +152,7 @@ router.post(
   }
 );
 
+//Blogs
 router.get("/blogs", (req, res, next) => {
   BlogService.blogList({})
     .then((dt) => {
