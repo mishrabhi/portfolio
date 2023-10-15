@@ -66,16 +66,16 @@ exports.getOne = (alias) => {
   });
 };
 
-exports.deleteProject = (alias) => {
+exports.deleteProject = (alias, token) => {
   const headers = {
-    "x-access-apiKey": "f02032c1-3099-45df-b7b9-f18d86c633f8",
+    Authorization: `Bearer ${token}`,
   };
   let uri = `http://localhost:3100/api/projects/${alias}`;
   return new Promise((resolve, reject) => {
     axios
-      .get(uri, { headers: headers })
+      .delete(uri, { headers: headers })
       .then((resp) => {
-        if (resp.status === 200) {
+        if (resp.status === 204) {
           resolve(resp.data);
         } else {
           reject(resp.data);
@@ -87,15 +87,20 @@ exports.deleteProject = (alias) => {
   });
 };
 
-exports.updateProject = (alias, dt) => {
+exports.updateProject = (alias, data, token) => {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+  };
+  let uri = `http://localhost:3100/api/projects/${alias}`;
   return new Promise((resolve, reject) => {
-    Project.findOneAndUpdate(
-      { alias: alias },
-      { $set: dt, $inc: { __v: 1 } },
-      { new: true }
-    )
-      .then((dt) => {
-        resolve(dt);
+    axios
+      .put(uri, data, { headers: headers })
+      .then((resp) => {
+        if (resp.status === 200) {
+          resolve(resp.data);
+        } else {
+          reject(resp.data);
+        }
       })
       .catch((err) => {
         reject(err);

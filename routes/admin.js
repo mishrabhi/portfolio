@@ -69,7 +69,6 @@ router.post("/projects/create", (req, res, next) => {
     });
   }
   bodyData.tags = finalTags;
-  // bodyData.alias = bodyData.name.toLowerCase().split(" ").join("-");
   ProjectService.create(bodyData, req.session.token)
     .then((dt) => {
       res.redirect("/admin/projects");
@@ -95,7 +94,7 @@ router.get("/projects/:alias", (req, res, next) => {
 
 router.get("/projects/:alias/delete", (req, res, next) => {
   const alias = req.params.alias;
-  ProjectService.deleteProject(alias)
+  ProjectService.deleteProject(alias, req.session.token)
     .then((dt) => {
       res.redirect("/admin/projects");
     })
@@ -117,9 +116,7 @@ router.post("/projects/:alias/update", (req, res, next) => {
     });
   }
   bodyData.tags = finalTags;
-  bodyData.alias = bodyData.name.toLowerCase().split(" ").join("-");
-
-  ProjectService.updateProject(alias, bodyData)
+  ProjectService.updateProject(alias, bodyData, req.session.token)
     .then((dt) => {
       res.redirect("/admin/projects");
     })
